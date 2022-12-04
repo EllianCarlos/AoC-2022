@@ -8,28 +8,18 @@ enum GAME {
   Scissors = "C",
 }
 
-type PossibleResults = "LOSE" | "DRAW" | "WIN";
-type PlayableInstructions = "X" | "Y" | "Z";
-
 enum GAME_RESULT {
   LOSE = "X",
   DRAW = "Y",
   WIN = "Z",
 }
-
-const resultPoints = {
-  LOSE: 0,
-  DRAW: 3,
-  WIN: 6,
-};
-
 const shapePoints: Record<GAME, number> = {
   [GAME.Rock]: 1,
   [GAME.Paper]: 2,
   [GAME.Scissors]: 3,
 };
 
-const gameSolution: Record<string, string> = {
+const gameSolution: Record<GAME, GAME> = {
   [GAME.Rock]: GAME.Paper,
   [GAME.Paper]: GAME.Scissors,
   [GAME.Scissors]: GAME.Rock,
@@ -48,30 +38,30 @@ const calculateScore = (playerA: GAME, playerB: GAME): number => {
   return score;
 };
 
-const calculateScoreGivenResult = (
-  result: GAME_RESULT,
-  oponent: GAME
-): number[] => {
+const calculateScoresGivenResult = (result: GAME_RESULT, oponent: GAME) => {
   let myScore = 0;
   let oponentScore = 0;
   let myPlay: GAME;
 
   if (result === GAME_RESULT.WIN) {
     myScore += 6;
-    myPlay = gameSolution[oponent] as GAME;
+    myPlay = gameSolution[oponent];
   } else if (result === GAME_RESULT.DRAW) {
     myScore += 3;
     oponentScore += 3;
-    myPlay = oponent as GAME;
-  } else {
+    myPlay = oponent;
+  } else if (result === GAME_RESULT.LOSE) {
     oponentScore += 6;
-    myPlay = gameSolution[gameSolution[oponent]] as GAME;
+    myPlay = gameSolution[gameSolution[oponent]];
+  } else {
+    console.log(result);
+    throw new Error();
   }
 
   myScore += shapePoints[myPlay];
   oponentScore += shapePoints[oponent];
 
-  return [myScore, oponentScore];
+  return { myScore, oponentScore };
 };
 
 export default function main() {
@@ -83,12 +73,13 @@ export default function main() {
 
   const gameScore = parsedLines.reduce(
     (totalScores: number[], [oponent, selected]: string[]): number[] => {
-      const result = GAME_RESULT[selected as keyof typeof GAME_RESULT];
+      const scoreResults = calculateScoresGivenResult(
+        selected as GAME_RESULT,
+        oponent as GAME
+      );
 
-      const scoreResults = calculateScoreGivenResult(result, oponent as GAME);
-
-      totalScores[0] += scoreResults[0];
-      totalScores[1] += scoreResults[1];
+      totalScores[0] += scoreResults.myScore;
+      totalScores[1] += scoreResults.oponentScore;
 
       return totalScores;
     },
