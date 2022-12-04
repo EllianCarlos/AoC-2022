@@ -1,0 +1,12 @@
+{
+  "name": "aoc-2022",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/EllianCarlos/AoC-2022.git",
+  "author": "elliancarlos <17656878+EllianCarlos@users.noreply.github.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {}
+}
