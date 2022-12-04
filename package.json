@@ -6,7 +6,10 @@
   "author": "elliancarlos <17656878+EllianCarlos@users.noreply.github.com>",
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^18.11.10",
     "typescript": "^4.9.3"
   },
-  "dependencies": {}
+  "dependencies": {
+    "vite": "^3.2.4"
+  }
 }
